@@ -1,6 +1,7 @@
 package rege.rege.nbtutils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import rege.rege.utf8chr.UTF8Char;
@@ -384,5 +385,35 @@ public class NBTTag {
             default: assert false;
         }
         return "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof NBTTag) {
+            final NBTTag CVT = (NBTTag)o;
+            if (this.type != o.type) {
+                return false;
+            }
+            switch (this.type) {
+                case TAG_Byte: return this.asByte == CVT.asByte;
+                case TAG_Short: return this.asShort == CVT.asShort;
+                case TAG_Int: return this.asInt == CVT.asInt;
+                case TAG_Long: return this.asLong == CVT.asLong;
+                case TAG_Float: return this.asFloat == CVT.asFloat;
+                case TAG_Double: return this.asDouble == CVT.asDouble;
+                case TAG_Byte_Array: return Arrays.equals(this.asByteArray,
+                                                          CVT.asByteArray);
+                case TAG_String: return this.asString.equals(CVT.asString);
+                case TAG_List: return this.asList.equals(CVT.asList);
+                case TAG_Compound: return this.asCompound
+                                          .equals(CVT.asCompound);
+                case TAG_Int_Array: return Arrays.equals(this.asIntArray,
+                                                         CVT.asIntArray);
+                case TAG_Long_Array: return Arrays.equals(this.asLongArray,
+                                                          CVT.asLongArray);
+                default: assert false;
+            }
+        }
+        return false;
     }
 }

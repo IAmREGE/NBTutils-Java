@@ -85,4 +85,9 @@ public class NBTCompound {
         return this.containsName(name) &&
                (type == null || this.get(name).type == type);
     }
+
+    public boolean equals(Object o) {
+        // TODO
+        return this == o;
+    }
 }
