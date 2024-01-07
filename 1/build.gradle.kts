@@ -8,6 +8,9 @@ repositories {
 }
 
 dependencies {
+    /* Edit where the UTF8chr Jar file is.
+     * You can build it from https://github.com/IAmREGE/UTF8chr
+     */
     implementation(files("utf8chr.jar"))
 }
 
