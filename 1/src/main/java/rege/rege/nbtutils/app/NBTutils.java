@@ -7,6 +7,10 @@ import java.io.IOException;
 import rege.rege.nbtutils.NBTTagIO;
 import rege.rege.nbtutils.NBTTagType;
 
+/**
+ * @author REGE
+ * @since 0.0.1a1
+ */
 public class NBTutils {
     public static class AutoZeroInputStream extends InputStream {
         public final InputStream stream;
@@ -37,7 +41,9 @@ public class NBTutils {
                     NBTTagIO.writeSNBTToStream(NBTTagIO.readFromStream(
                         NBTTagType.TAG_Compound,
                         new AutoZeroInputStream(System.in)
-                    ), System.out);
+                    ).getValue(), System.out);
+                    System.out.println();
+                    System.out.flush();
                 } else {
                     printHelp();
                 }
@@ -48,7 +54,9 @@ public class NBTutils {
                     NBTTagIO.writeSNBTToStream(NBTTagIO.readFromStream(
                         NBTTagType.TAG_Compound,
                         new AutoZeroInputStream(new FileInputStream(args[1]))
-                    ), System.out);
+                    ).getValue(), System.out);
+                    System.out.println();
+                    System.out.flush();
                 } else {
                     printHelp();
                 }
