@@ -5,8 +5,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import rege.rege.utf8chr.UTF8Char;
 import rege.rege.utf8chr.UTF8Sequence;
 
+/**
+ * @author REGE
+ * @since 0.0.1a1
+ */
 public class NBTCompound {
     private final Map<UTF8Sequence, NBTTag> map;
 
@@ -27,6 +32,12 @@ public class NBTCompound {
             if (i.getValue() == null) {
                 throw new NullPointerException("Tag is null");
             }
+            final int LENGTH = i.getKey().length();
+            if (LENGTH > 65535) {
+                throw new IllegalArgumentException(
+                    "one of the names is with a length of " +
+                    Integer.toString(LENGTH) + " which is greater than 65535");
+            }
         }
         this.map = new HashMap<UTF8Sequence, NBTTag>(map);
     }
@@ -36,8 +47,14 @@ public class NBTCompound {
         if (name == null) {
             throw new NullPointerException("Name is null");
         }
+        final int LENGTH = name.length();
+        if (LENGTH > 65535) {
+            throw new IllegalArgumentException("Name is with a length of " +
+                                               Integer.toString(LENGTH) +
+                                               " which is greater than 65535");
+        }
         if (tag == null) {
-            return this.remove(name);
+            return this.get(name);
         }
         return this.map.put(name, tag);
     }
@@ -86,8 +103,49 @@ public class NBTCompound {
                (type == null || this.get(name).type == type);
     }
 
+    @Override
+    public String toString() {
+        final int SIZE = this.size();
+        if (SIZE == 0) {
+            return "[]";
+        }
+        final StringBuilder SB = new StringBuilder();
+        SB.append('{');
+        for (Entry<UTF8Sequence, NBTTag> i : this.map.entrySet()) {
+            if (i.getKey().strip(new UTF8Sequence(
+                "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-.+"
+            )).isEmpty() && !(i.getKey().isEmpty())) {
+                SB.append(i.getKey().toString());
+            } else {
+                SB.append('"');
+                final UTF8Char QUOTE = new UTF8Char('"');
+                final UTF8Char BACKSLASH = new UTF8Char('\\');
+                SB.append(i.getKey().replace(BACKSLASH, new UTF8Sequence(
+                    new UTF8Char[]{BACKSLASH, BACKSLASH}
+                )).replace(QUOTE, new UTF8Sequence(new UTF8Char[]{
+                    BACKSLASH, QUOTE
+                })).toString());
+                SB.append('"');
+            }
+            SB.append(i.getValue().toString());
+            SB.append(',');
+        }
+        SB.setCharAt(SB.length() - 1, '}');
+        return SB.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
-        // TODO
-        return this == o;
+        return (o instanceof NBTCompound) &&
+               this.map.equals(((NBTCompound)o).map);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.map.hashCode();
+    }
+
+    public int size() {
+        return this.map.size();
     }
 }

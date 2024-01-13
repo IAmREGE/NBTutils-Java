@@ -22,3 +22,5 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 .vscode
+
+1/*.jar
